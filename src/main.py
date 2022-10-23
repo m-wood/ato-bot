@@ -8,7 +8,7 @@ My shitty discord bot
 import argparse
 import errno
 from types import ModuleType
-import discord.errors
+import discord
 
 
 def main():
@@ -21,11 +21,9 @@ def main():
     args = parser.parse_args()
 
     if args.token is not None:
-        
         try:
             import atobot
             run_ato_bot(args.token, atobot)
-
 
         except ImportError:
             print("Required module atobot not found")
@@ -33,21 +31,22 @@ def main():
         except discord.errors.LoginFailure:
             print("Token was rejected")
             quit(errno.EINVAL)
-        
-        
+        except Exception:
+            print("quitting bot")
+
+
     else:
         print("Missing parameter: bot token")
         quit(errno.EINVAL)
 
+
 def run_ato_bot(token: str, bot_module: ModuleType) -> None:
-    intents = discord.Intents.default()
+    intents = discord.Intents.all()
     intents.message_content = True
-    intents.members = True
-            
+    intents.messages = True
     connection = bot_module.AtoBotClient(intents=intents)
-    # connection.run(token)
+    connection.run(token)
 
 
 if __name__ == "__main__":
     main()
-    

@@ -13,4 +13,4 @@ set token=%token% %1%
 goto :eof
 
 :finish
-pause
+exit
